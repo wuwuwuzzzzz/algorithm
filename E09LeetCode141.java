@@ -2,7 +2,7 @@
  * @author wxz
  * @date 17:19 2023/11/7
  */
-public class E09LeetCode234
+public class E09LeetCode141
 {
     /**
      * @param args args
@@ -11,55 +11,72 @@ public class E09LeetCode234
      */
     public static void main(String[] args)
     {
-        ListNode head = new ListNode(1, new ListNode(2, new ListNode(2, new ListNode(1, null))));
-        System.out.println(head);
-        System.out.println(new E09LeetCode234().isPalindrome(head));
+        // 创建环形链表
+        ListNode n4 = new ListNode(4, null);
+        ListNode n3 = new ListNode(3, n4);
+        ListNode n2 = new ListNode(2, n3);
+        ListNode n1 = new ListNode(1, n2);
+        n4.next = n1;
+        System.out.println(new E09LeetCode141().hasCycle(n1));
+        System.out.println(new E09LeetCode141().detectCycle(n1).val);
     }
 
     /**
-     * 判断是否是回环链表
+     * 检测链表是否有环
      *
      * @param head head
      * @return boolean
      * @author wxz
      * @date 17:20 2023/11/7
      */
-    public boolean isPalindrome(ListNode head)
+    public boolean hasCycle(ListNode head)
     {
-        // 慢
-        ListNode p1 = head;
-        // 快
-        ListNode p2 = head;
-        // 新头
-        ListNode n1 = null;
-        // 旧头
-        ListNode o1 = head;
-        while (p2 != null && p2.next != null)
+        // 兔
+        ListNode h = head;
+        // 龟
+        ListNode t = head;
+        while (h != null && h.next != null)
         {
-            p1 = p1.next;
-            p2 = p2.next.next;
-
-            // 反转链表
-            o1.next = n1;
-            n1 = o1;
-            o1 = p1;
-        }
-
-        // 奇数节点
-        if (p2 != null)
-        {
-            p1 = p1.next;
-        }
-
-        while (n1 != null)
-        {
-            if (n1.val != p1.val)
+            t = t.next;
+            h = h.next.next;
+            if (h == t)
             {
-                return false;
+                return true;
             }
-            n1 = n1.next;
-            p1 = p1.next;
         }
-        return true;
+        return false;
+    }
+
+    /**
+     * 检测环的入口
+     *
+     * @param head head
+     * @return ListNode
+     * @author wxz
+     * @date 11:36 2023/11/8
+     */
+    public ListNode detectCycle(ListNode head)
+    {
+        // 兔
+        ListNode h = head;
+        // 龟
+        ListNode t = head;
+        while (h != null && h.next != null)
+        {
+            t = t.next;
+            h = h.next.next;
+            if (h == t)
+            {
+                t = head;
+                while (true) {
+                    if (t == h) {
+                        return t;
+                    }
+                    t = t.next;
+                    h = h.next;
+                }
+            }
+        }
+        return null;
     }
 }
