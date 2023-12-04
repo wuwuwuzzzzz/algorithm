@@ -1,3 +1,5 @@
+import org.w3c.dom.Node;
+
 import java.util.Arrays;
 
 /**
@@ -286,6 +288,9 @@ public class BTree
         }
     }
 
+    /**
+     * 节点类
+     */
     static class Node
     {
         /**
