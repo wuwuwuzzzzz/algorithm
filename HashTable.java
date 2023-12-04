@@ -13,10 +13,15 @@ public class HashTable
      */
     int size = 0;
 
-    /*
-
-
+    /**
+     * 负载因子
      */
+    float loadFactor = 0.75f;
+
+    /**
+     * 阈值
+     */
+    int threshold = (int) (loadFactor * table.length);
 
     /**
      * 根据 hash 码获取 value
@@ -84,10 +89,77 @@ public class HashTable
             p.next = new Entry(hash, key, value);
         }
         size++;
+        if (size > threshold)
+        {
+            resize();
+        }
     }
 
     /**
-     * 根绝 hash 码删除，返回删除的 value
+     * 扩容
+     *
+     * @author wxz
+     * @date 09:48 2023/12/4
+     */
+    private void resize()
+    {
+        Entry[] newTable = new Entry[table.length << 1];
+        for (int i = 0; i < table.length; i++)
+        {
+            Entry p = table[i];
+            if (p != null)
+            {
+                // 拆分链表，移动到新数组
+                Entry a = null;
+                Entry b = null;
+                Entry aHead = null;
+                Entry bHead = null;
+                while (p != null)
+                {
+                    if ((p.hash & table.length) == 0)
+                    {
+                        if (a != null)
+                        {
+                            a.next = p;
+                        }
+                        else
+                        {
+                            aHead = p;
+                        }
+                        a = p;
+                    }
+                    else
+                    {
+                        if (b != null)
+                        {
+                            b.next = p;
+                        }
+                        else
+                        {
+                            bHead = p;
+                        }
+                        b = p;
+                    }
+                    p = p.next;
+                }
+                if (a != null)
+                {
+                    a.next = null;
+                    newTable[i] = aHead;
+                }
+                if (b != null)
+                {
+                    b.next = null;
+                    newTable[i + table.length] = bHead;
+                }
+            }
+        }
+        table = newTable;
+        threshold = (int) (loadFactor * table.length);
+    }
+
+    /**
+     * 根据 hash 码删除，返回删除的 value
      *
      * @return java.lang.Object
      * @author wxz
