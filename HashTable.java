@@ -24,6 +24,19 @@ public class HashTable
     int threshold = (int) (loadFactor * table.length);
 
     /**
+     * 获取哈希值
+     *
+     * @return int
+     * @author wxz
+     * @date 10:35 2023/12/4
+     */
+    private static int getHash(Object key)
+    {
+        int hash = key.hashCode();
+        return hash ^ (hash >>> 16);
+    }
+
+    /**
      * 根据 hash 码获取 value
      * <p>
      * - 求模运算替换为位运算
@@ -194,6 +207,38 @@ public class HashTable
             p = p.next;
         }
         return null;
+    }
+
+    /**
+     * @return java.lang.Object
+     * @author wxz
+     * @date 10:32 2023/12/4
+     */
+    public Object get(Object key)
+    {
+        int hash = getHash(key);
+        return get(hash, key);
+    }
+
+    /**
+     * @author wxz
+     * @date 10:33 2023/12/4
+     */
+    public void put(Object key, Object value)
+    {
+        int hash = getHash(key);
+        put(hash, key, value);
+    }
+
+    /**
+     * @return java.lang.Object
+     * @author wxz
+     * @date 10:34 2023/12/4
+     */
+    public Object remove(Object key)
+    {
+        int hash = getHash(key);
+        return remove(hash, key);
     }
 
     /**
